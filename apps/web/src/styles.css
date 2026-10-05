@@ -1,0 +1,19 @@
+:root{--bg:#f6f7f9;--fg:#1b1f24;--mut:#6b7280;--card:#fff;--bd:#e3e6ea;--acc:#2563eb}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1216;--fg:#e6e8eb;--mut:#8b93a1;--card:#171b21;--bd:#262c35;--acc:#60a5fa}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 system-ui,sans-serif}
+a{color:var(--acc);text-decoration:none}.muted{color:var(--mut)}.err{color:#dc2626}.ok{color:#16a34a}.pad{padding:24px}
+header{display:flex;gap:24px;align-items:center;padding:12px 24px;background:var(--card);border-bottom:1px solid var(--bd)}
+header nav{display:flex;gap:16px;flex:1}header nav a.active{font-weight:600;color:var(--fg)}
+main{max-width:1100px;margin:0 auto;padding:24px}
+section,.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:16px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}.card{margin:0}.card span{color:var(--mut)}.card b{display:block;font-size:28px}
+.row{display:grid;grid-template-columns:150px 1.4fr 1.4fr 1fr 80px;gap:12px;padding:8px 4px;border-bottom:1px solid var(--bd);color:var(--fg)}.row:hover{background:var(--bg)}
+.filters{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}.filters input{flex:1;min-width:260px}
+input,select,button,.btn{font:inherit;padding:6px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--fg);cursor:pointer}button{margin:0 6px 6px 0}
+.sev{font-size:11px;font-weight:600;padding:1px 8px;border-radius:99px;background:var(--bd);text-align:center;height:fit-content}
+.sev.HIGH{background:#fee2e2;color:#b91c1c}.sev.CRITICAL{background:#b91c1c;color:#fff}.sev.MEDIUM{background:#fef3c7;color:#92400e}
+dl{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 24px}dt{color:var(--mut);font-size:12px}dd{margin:0}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--bd)}tr.chg td{background:rgba(234,179,8,.15)}
+pre{background:var(--bg);padding:12px;border-radius:6px;overflow:auto}
+.timeline{list-style:none;margin:0;padding:0 0 0 16px;border-left:2px solid var(--bd)}.timeline li{padding:6px 0 6px 12px;position:relative}
+.timeline li:before{content:"";position:absolute;left:-23px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--acc)}.timeline time{color:var(--mut);margin-right:12px}

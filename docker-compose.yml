@@ -1,0 +1,42 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: audit
+      POSTGRES_PASSWORD: audit
+      POSTGRES_DB: audit
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U audit"]
+      interval: 5s
+      retries: 10
+
+  kafka:
+    image: apache/kafka:4.3.1
+    ports: ["9092:9092"]
+    environment:
+      # ── Identity and role ──
+      KAFKA_NODE_ID: 1 # Unique ID of this server in the cluster. Also the ID used in the quorum voters setting below.
+      KAFKA_PROCESS_ROLES: broker,controller # What this node does: broker = stores/serves messages, controller = manages cluster metadata (replaces ZooKeeper). One node doing both suits local dev.
+
+      # ── Network: listeners ──
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093 # Ports Kafka opens inside the container: 9092 for clients (our apps), 9093 for internal controller traffic. Empty host = all interfaces.
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092 # Address Kafka tells clients to reconnect to. localhost works because our Node apps run on your machine; apps inside Docker would need a different address.
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER # Which listener above is the controller one, so it isn't offered to normal clients.
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT # Security protocol per listener name. PLAINTEXT = no encryption or auth (fine locally, not for production).
+
+      # ── Controller quorum ──
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093 # Controllers list as nodeId@host:port. One controller here; production would list 3+ (e.g. 1@k1:9093,2@k2:9093,3@k3:9093).
+
+      # ── Internal topics (single-broker overrides; defaults assume 3+ brokers) ──
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1 # Copies of __consumer_offsets (tracks how far each consumer group has read). Default is 3.
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1 # Copies of __transaction_state (used by transactions and idempotent producers, which our producers enable).
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1 # Minimum in-sync replicas needed to accept writes to that topic. Default 2 can never be met by one broker, so writes would hang.
+
+      # ── Behaviour of our topics and consumers ──
+      KAFKA_NUM_PARTITIONS: 3 # Default partition count for auto-created topics. More partitions = more consumers in a group can work in parallel.
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0 # How long the broker waits for more consumers to join before the first assignment. Default 3000 ms; 0 starts consumers immediately (good for local dev).
+
+volumes:
+  pgdata:

@@ -1,0 +1,26 @@
+{
+  "name": "audit-trail-platform",
+  "private": true,
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "prepare": "npm run build -w @audit/contracts",
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "dev:api": "npm run start:dev -w @audit/api",
+    "dev:consumer": "npm run dev -w @audit/consumer",
+    "dev:simulator": "npm run dev -w @audit/simulator",
+    "dev:web": "npm run dev -w @audit/web",
+    "build": "npm run build -w @audit/contracts && npm run build -w @audit/api && npm run build -w @audit/consumer && npm run build -w @audit/simulator",
+    "test": "npm test --workspaces --if-present"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/pg": "^8.11.10",
+    "dotenv": "^16.4.5",
+    "kafkajs": "^2.2.4",
+    "pg": "^8.13.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

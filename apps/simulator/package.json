@@ -1,0 +1,12 @@
+{
+  "name": "@audit/simulator",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js",
+    "dev": "tsx watch src/main.ts",
+    "simulate": "tsx src/main.ts"
+  },
+  "dependencies": { "dotenv": "^16.4.5", "kafkajs": "^2.2.4" }
+}
